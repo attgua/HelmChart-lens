@@ -7,30 +7,20 @@ spec:
   selector:
     matchLabels:
       name: kube-state-metrics
-  replicas: 1
+  replicas: {{ .Values.kube-state-metrics.replicas }}
   template:
     metadata:
       labels:
         name: kube-state-metrics
     spec:
+      {{- with .Values.kube-state-metrics.affinity }}
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
-              - matchExpressions:
-                - key: beta.kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
+        image: {{ .Values.kube-state-metrics.image }}
         ports:
         - name: metrics
           containerPort: 8080
@@ -41,9 +31,5 @@ spec:
           initialDelaySeconds: 5
           timeoutSeconds: 5
         resources:
-          requests:
-            cpu: 10m
-            memory: 32Mi
-          limits:
-            cpu: 200m
-            memory: 150Mi
+            {{- toYaml .Values.kube-state-metrics.resources | nindent 12 }}
+

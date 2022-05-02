@@ -20,27 +20,17 @@ spec:
       annotations:
         seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
     spec:
+      {{- with .Values.node-exporter.affinity }}
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
-              - matchExpressions:
-                - key: beta.kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
       hostPID: true
       containers:
       - name: node-exporter
-        image: quay.io/prometheus/node-exporter:v1.1.2
+        image: {{ .Values.node-exporter.image }}
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys
@@ -51,12 +41,7 @@ spec:
           - name: metrics
             containerPort: 9100
         resources:
-          requests:
-            cpu: 10m
-            memory: 24Mi
-          limits:
-            cpu: 200m
-            memory: 100Mi
+            {{- toYaml .Values.node-exporter.resources | nindent 12 }}
         volumeMounts:
           - name: proc
             mountPath: /host/proc

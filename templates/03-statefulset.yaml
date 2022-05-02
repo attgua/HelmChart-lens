@@ -14,7 +14,7 @@ spec:
       labels:
         name: prometheus
     spec:
-      {{- with .Values.affinity }}
+      {{- with .Values.prometheus.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -75,9 +75,7 @@ spec:
             initialDelaySeconds: 10
             timeoutSeconds: 10
           resources:
-            requests:
-              cpu: 100m
-              memory: 512Mi
+            {{- toYaml .Values.prometheus.resources | nindent 12 }}
       terminationGracePeriodSeconds: 30
       volumes:
         - name: config
