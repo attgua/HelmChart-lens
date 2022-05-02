@@ -1,0 +1,10 @@
+namespace:
+  name: lens-metrics
+
+statefulset:
+  replicas: 3
+  persistance:
+    enabled: false
+    storageClass: name
+    size: 
+
