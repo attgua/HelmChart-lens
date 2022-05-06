@@ -2,6 +2,10 @@ prometheus:
   initImage: docker.io/alpine:3.12
   image: quay.io/prometheus/prometheus:v2.27.1
   replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
   affinity: 
     nodeAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -20,13 +24,20 @@ prometheus:
             values:
             - infra
         topologyKey: kubernetes.io/hostname
-  resources:
-    requests:
-      cpu: 100m
-      memory: 512Mi
+
 
 nodeExporter:
   image: quay.io/prometheus/node-exporter:v1.1.2
+  resources:
+    requests:
+      cpu: 10m
+      memory: 24Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
   affinity: 
     nodeAffinity:
      requiredDuringSchedulingIgnoredDuringExecution:
@@ -45,20 +56,18 @@ nodeExporter:
             values:
             - infra
         topologyKey: kubernetes.io/hostname
-  resources:
-    requests:
-      cpu: 10m
-      memory: 24Mi
-    limits:
-      cpu: 200m
-      memory: 100Mi
-  tolerations:
-    - effect: NoSchedule
-      operator: Exists
+
 
 kubeStateMetrics:
   image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
   replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 150Mi
   affinity: 
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -77,10 +86,3 @@ kubeStateMetrics:
             values:
             - infra
         topologyKey: kubernetes.io/hostname
-  resources:
-    requests:
-      cpu: 10m
-      memory: 32Mi
-    limits:
-      cpu: 200m
-      memory: 150Mi

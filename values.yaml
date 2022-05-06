@@ -2,17 +2,20 @@ prometheus:
   initImage: docker.io/alpine:3.12
   image: quay.io/prometheus/prometheus:v2.27.1
   replicas: 1
-  tolerations: {}
+  resources: {}
   affinity: {}
+  tolerations: {}
 
 node-exporter:
   image: quay.io/prometheus/node-exporter:v1.1.2
-  tolerations: {}
+  resources: {}
   affinity: {}
+  tolerations: {}
 
 
 kube-state-metrics:
   image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
   replicas: 1
-  tolerations: {}
+  resources: {}
   affinity: {}
+  tolerations: {}
