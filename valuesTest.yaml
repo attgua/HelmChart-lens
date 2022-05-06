@@ -3,19 +3,19 @@ prometheus:
   image: quay.io/prometheus/prometheus:v2.27.1
   replicas: 1
   affinity: 
-    # nodeAntiAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     nodeSelectorTerms:
-    #     - matchExpressions:
-    #       - key: ch.viseca.metadata.node/role
-    #         operator: In
-    #         values:
-    #         - infra
+    nodeAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: key_name
+            operator: In
+            values:
+            - infra
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
           matchExpressions:
-          - key: ch.viseca.metadata.node/role
+          - key: key_name
             operator: In
             values:
             - infra
@@ -28,19 +28,19 @@ prometheus:
 nodeExporter:
   image: quay.io/prometheus/node-exporter:v1.1.2
   affinity: 
-    #nodeAffinity:
-    #  requiredDuringSchedulingIgnoredDuringExecution:
-    #    nodeSelectorTerms:
-    #    - matchExpressions:
-    #      - key: ch.viseca.metadata.node/role
-    #        operator: In
-    #        values:
-    #        - infra
+    nodeAffinity:
+     requiredDuringSchedulingIgnoredDuringExecution:
+       nodeSelectorTerms:
+       - matchExpressions:
+         - key: key_name
+           operator: In
+           values:
+           - infra
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
           matchExpressions:
-          - key: ch.viseca.metadata.node/role
+          - key: key_name
             operator: In
             values:
             - infra
@@ -60,19 +60,19 @@ kubeStateMetrics:
   image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
   replicas: 1
   affinity: 
-    # nodeAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     nodeSelectorTerms:
-    #     - matchExpressions:
-    #       - key: ch.viseca.metadata.node/role
-    #         operator: In
-    #         values:
-    #         - infra
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: key_name
+            operator: In
+            values:
+            - infra
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
           matchExpressions:
-          - key: ch.viseca.metadata.node/role
+          - key: key_name
             operator: In
             values:
             - infra
