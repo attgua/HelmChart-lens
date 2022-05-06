@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: prometheus
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.namespace }}
 spec:
   replicas: {{ .Values.prometheus.replicas }}
   serviceName: prometheus
@@ -14,10 +14,6 @@ spec:
       labels:
         name: prometheus
     spec:
-      {{- with .Values.prometheus.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       # <%- if config.node_selector -%>
       # nodeSelector:
       # <%- node_selector.to_h.each do |key, value| -%>
@@ -36,14 +32,14 @@ spec:
       serviceAccountName: prometheus
       initContainers:
         - name: chown
-          image: docker.io/alpine:3.12
+          image: {{ .Values.prometheus.initImage }}
           command: ["chown", "-R", "65534:65534", "/var/lib/prometheus"]
           volumeMounts:
             - name: data
               mountPath: /var/lib/prometheus
       containers:
         - name: prometheus
-          image: quay.io/prometheus/prometheus:v2.27.1
+          image: {{ .Values.prometheus.image }}
           args:
             - --web.listen-address=0.0.0.0:9090
             - --config.file=/etc/prometheus/prometheus.yaml
@@ -76,6 +72,14 @@ spec:
             timeoutSeconds: 10
           resources:
             {{- toYaml .Values.prometheus.resources | nindent 12 }}
+      {{- with .Values.prometheus.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.prometheus.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       terminationGracePeriodSeconds: 30
       volumes:
         - name: config

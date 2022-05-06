@@ -2,25 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kube-state-metrics
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.namespace }}
 spec:
   selector:
     matchLabels:
       name: kube-state-metrics
-  replicas: {{ .Values.kube-state-metrics.replicas }}
+  replicas: {{ .Values.kubeStateMetrics.replicas }}
   template:
     metadata:
       labels:
         name: kube-state-metrics
     spec:
-      {{- with .Values.kube-state-metrics.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: {{ .Values.kube-state-metrics.image }}
+        image: {{ .Values.kubeStateMetrics.image }}
         ports:
         - name: metrics
           containerPort: 8080
@@ -31,5 +27,14 @@ spec:
           initialDelaySeconds: 5
           timeoutSeconds: 5
         resources:
-            {{- toYaml .Values.kube-state-metrics.resources | nindent 12 }}
+          {{- toYaml .Values.kubeStateMetrics.resources | nindent 10 }}
+      {{- with .Values.kubeStateMetrics.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.kubeStateMetrics.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
 

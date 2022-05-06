@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: node-exporter
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.namespace }}
 spec:
   updateStrategy:
     type: RollingUpdate
@@ -20,17 +20,13 @@ spec:
       annotations:
         seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
     spec:
-      {{- with .Values.node-exporter.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
       hostPID: true
       containers:
       - name: node-exporter
-        image: {{ .Values.node-exporter.image }}
+        image: {{ .Values.nodeExporter.image }}
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys
@@ -40,8 +36,6 @@ spec:
         ports:
           - name: metrics
             containerPort: 9100
-        resources:
-            {{- toYaml .Values.node-exporter.resources | nindent 12 }}
         volumeMounts:
           - name: proc
             mountPath: /host/proc
@@ -52,9 +46,14 @@ spec:
           - name: root
             mountPath: /host/root
             readOnly: true
+      {{- with .Values.nodeExporter.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeExporter.tolerations }}
       tolerations:
-        - effect: NoSchedule
-          operator: Exists
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: proc
           hostPath:
