@@ -5,12 +5,14 @@ prometheus:
   resources: {}
   affinity: {}
   tolerations: {}
+  nodeSelector: {}
 
 node-exporter:
   image: quay.io/prometheus/node-exporter:v1.1.2
   resources: {}
   affinity: {}
   tolerations: {}
+  nodeSelector: {}
 
 kube-state-metrics:
   image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
@@ -18,3 +20,4 @@ kube-state-metrics:
   resources: {}
   affinity: {}
   tolerations: {}
+  nodeSelector: {}
