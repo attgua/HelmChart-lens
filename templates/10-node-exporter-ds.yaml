@@ -31,7 +31,7 @@ spec:
       containers:
       - name: node-exporter
         image: {{ .Values.nodeExporter.image }}
-        imagePullPolicy: always
+        imagePullPolicy: Always
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys

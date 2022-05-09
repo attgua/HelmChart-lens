@@ -14,21 +14,6 @@ spec:
       labels:
         name: prometheus
     spec:
-      # <%- if config.node_selector -%>
-      # nodeSelector:
-      # <%- node_selector.to_h.each do |key, value| -%>
-      #   <%= key %>: <%= value %>
-      # <%- end -%>
-      # <%- end -%>
-      # <%- unless config.tolerations.empty? -%>
-      # tolerations:
-      # <%- config.tolerations.each do |t| -%>
-      #   -
-      #     <%- t.each do |k,v| -%>
-      #     <%= k %>: <%= v %>
-      #     <%- end -%>
-      # <%- end -%>
-      # <%- end -%>
       {{- with .Values.prometheus.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -37,7 +22,7 @@ spec:
       initContainers:
         - name: chown
           image: {{ .Values.prometheus.initImage }}
-          imagePullPolicy: always
+          imagePullPolicy: Always
           command: ["chown", "-R", "65534:65534", "/var/lib/prometheus"]
           volumeMounts:
             - name: data
@@ -98,21 +83,5 @@ spec:
         - name: rules
           configMap:
             name: prometheus-rules
-        {{- if true }} #.Values.statefulset.persistence.enabled}}
         - name: data
           emptyDir: {}
-        {{end}}
-  {{- if false }} #.Values.statefulset.persistence.enabled}}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        {{- if .Values.statefulset.persistence.storageClass}}
-        storageClassName: "{{ .Values.statefulset.persistence.storageClass }}"
-        {{ end }}
-        resources:
-          requests:
-            storage: {{ .Values.statefulset.persistence.size }}
-  {{ end }}
