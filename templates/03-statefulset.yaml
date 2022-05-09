@@ -29,15 +29,10 @@ spec:
       #     <%- end -%>
       # <%- end -%>
       # <%- end -%>
-      {{- with .Values.prometheus.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: prometheus
       initContainers:
         - name: chown
           image: {{ .Values.prometheus.initImage }}
-          imagePullPolicy: always
           command: ["chown", "-R", "65534:65534", "/var/lib/prometheus"]
           volumeMounts:
             - name: data
@@ -45,7 +40,6 @@ spec:
       containers:
         - name: prometheus
           image: {{ .Values.prometheus.image }}
-          imagePullPolicy: always
           args:
             - --web.listen-address=0.0.0.0:9090
             - --config.file=/etc/prometheus/prometheus.yaml

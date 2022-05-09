@@ -6,7 +6,6 @@ prometheus:
   affinity: {}
   tolerations: {}
   nodeSelector: {}
-  imagePullSecrets: {}
 
 node-exporter:
   image: quay.io/prometheus/node-exporter:v1.1.2
@@ -14,7 +13,6 @@ node-exporter:
   affinity: {}
   tolerations: {}
   nodeSelector: {}
-  imagePullSecrets: {}
 
 kube-state-metrics:
   image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.0.0
@@ -23,4 +21,3 @@ kube-state-metrics:
   affinity: {}
   tolerations: {}
   nodeSelector: {}
-  imagePullSecrets: {}

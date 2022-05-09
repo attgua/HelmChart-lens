@@ -24,14 +24,9 @@ spec:
         runAsNonRoot: true
         runAsUser: 65534
       hostPID: true
-      {{- with .Values.nodeExporter.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
       - name: node-exporter
         image: {{ .Values.nodeExporter.image }}
-        imagePullPolicy: always
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys

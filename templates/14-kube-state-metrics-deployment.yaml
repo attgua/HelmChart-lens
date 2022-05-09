@@ -14,14 +14,9 @@ spec:
         name: kube-state-metrics
     spec:
       serviceAccountName: kube-state-metrics
-      {{- with .Values.kubeStateMetrics.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
       - name: kube-state-metrics
         image: {{ .Values.kubeStateMetrics.image }}
-        imagePullPolicy: always
         ports:
         - name: metrics
           containerPort: 8080
